@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Customers List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script src="./angular.min.js"></script>
+    <script>
+        var varModule = angular.module("myModule", []);
+        varModule.controller("myController", function($scope, $http) {
+            $scope.fetchedAllBills;
+            $scope.fetchreq=function() {
+                // alert(document.getElementById("numberMobile").value);
+                $scope.mobile=document.getElementById("numberMobile").value;
+                $http.get("fetch-unpaid-bills-customer.php?mobile="+$scope.mobile).then(ok,notok);
+                function ok(response) {
+                    // alert(JSON.stringify(response.data));
+                    if(response.data.length===0){
+                        document.getElementById("errMobile").innerHTML="Invalid Mobile Number or No Bill generated yet";
+                    }
+                    else{
+                        document.getElementById("errMobile").innerHTML="";
+                    }
+                    $scope.fetchedAllBills = response.data;
+                }
+                function notok() {
+                    alert("something went wrong");
+                }
+            }
+            $scope.payBill=function (billNumber){
+                $http.get("payBill-backend.php?billNo="+billNumber).then(ok,notok);
+                function ok(response) {
+                    // alert(JSON.stringify(response.data));
+                    if(response.data=="1") {
+                        alert("paid");
+                        $scope.fetchreq();
+                    } else {
+                        alert("not paid");
+                    }
+                    // $scope.fetchedAllBills = response.data;
+                }
+                function notok() {
+                    alert("something went wrong");
+                }
+            }
+        });
+
+    </script>
+</head>
+<body ng-app="myModule" ng-controller="myController">
+<nav class="navbar bg-dark">
+    <div class="container-fluid ">
+        <span class="navbar-brand mb-0 h1 text-white">Electro-Bill</span>
+        <a href="#">  <button class="btn btn-outline-success" onClick="">Dasboard</button></a>
+    </div>
+</nav>
+<div class="container-md" style=" background-color:lightgrey">
+    <div class="h2 border" style="background-color:#09203f; color:white;">
+        <center>List of unpaid Bills</center>
+    </div>
+    <div class="d-flex justify-content-evenly mt-3 mb-4">
+                <div class="col-md-4 ">
+<!--                    <label for="numberMobile">Registered Mobile Number</label><br>-->
+                    <input type="text" placeholder="Registered Mobile Number" ng-model="numberMobile" id="numberMobile" autofocus class="form-control" ng-init="txtUid='">
+                </div>
+                <div class="col-md-4 ">
+                    <input type="button" class="form-control btn btn-info" value="Fetch all Bills Generated" ng-click="fetchreq();">
+                    <span id="errMobile" style="color: red"></span>
+                </div>
+    </div>
+    <div style="background-color:white">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Bill No.</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Bill generated Date</th>
+                <th scope="col">Units Consumed</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Pay Bill</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="obj in fetchedAllBills">
+                <td scope="row">{{obj.billNo}}</td>
+                <td >{{obj.name}}</td>
+                <td>{{obj.dateOfBillGenerate}}</td>
+                <td>{{obj.units}} Watt</td>
+                <td> Rs. {{obj.amount}}</td>
+                <td>{{obj.dueDate}}</td>
+                <td>{{obj.status}}</td>
+                <td><button class="btn btn-success" ng-click="payBill(obj.billNo);">Pay</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
