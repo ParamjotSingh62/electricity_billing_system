@@ -17,7 +17,6 @@
             $scope.fetchedAllCustomers;
             $scope.fetchedCustomerBill;
             $scope.fetchreq=function() {
-                alert("dskfnslkn");
                 $http.get("fetch-all-customers.php").then(ok,notok);
                 function ok(response) {
                     // alert(JSON.stringify(response.data));
@@ -31,7 +30,7 @@
                 // alert(mobile);
                 $http.get("fetch-customer-bill.php?mobile="+mobile).then(ok,notok);
                 function ok(response) {
-                    alert(JSON.stringify(response.data));
+                    // alert(JSON.stringify(response.data));
                     $scope.fetchedCustomerBill = response.data;
                 }
                 function notok() {
@@ -46,7 +45,7 @@
 <nav class="navbar bg-dark">
     <div class="container-fluid ">
         <span class="navbar-brand mb-0 h1 text-white">Electro-Bill</span>
-        <a href="#">  <button class="btn btn-outline-success" onClick="">Dasboard</button></a>
+        <a href="./index.html">  <button class="btn btn-outline-success" onClick="">Dashboard</button></a>
     </div>
 </nav>
 <div class="container-md" style=" background-color:lightgrey">

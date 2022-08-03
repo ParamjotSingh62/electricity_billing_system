@@ -18,7 +18,12 @@ $query="insert into bills(mobile,name,dateOfBillGenerate,units,amount,dueDate,st
 mysqli_query($dbCon,$query);
 $error=mysqli_error($dbCon);
 if($error==""){
-    echo "Successful";
+    ?>
+    <div style="background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));height:100%"><h2>Bill generated Successfully</h2></div>
+    <script type="text/javascript">setTimeout("window.location='index.html'",3000);
+    </script>
+    <?php
+
 
 }
 else {
